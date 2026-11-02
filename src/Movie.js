@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 function Movie({ id, title, synopsis, cast, year, region, posterUrl, releaseDate, rank, audience, boxOfficeRevenue }) {
     return (
         <article className="movie-card">
-            <a className="movie-poster-link" href={`/movie/${id}`} aria-label={`${title} 상세 보기`}>
+            <Link className="movie-poster-link" to={`/movie/${id}`} aria-label={`${title} 상세 보기`}>
                 <div className="movie-poster poster-placeholder" role="img" aria-label={`${title} 포스터`}>
                     <span className="poster-kicker" aria-hidden="true">{region === "국내" ? "KOREAN" : "INTERNATIONAL"} CINEMA · {year}</span>
                     <span className="poster-title" aria-hidden="true">{title}</span>
@@ -11,19 +12,21 @@ function Movie({ id, title, synopsis, cast, year, region, posterUrl, releaseDate
                     <img className="poster-image" src={posterUrl} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = "none"; }} />
                 </div>
                 <span className="poster-overlay">상세 보기 <span aria-hidden="true">↗</span></span>
-            </a>
-            <div className="movie-card-content">
-                <div className="movie-card-heading">
-                    <h2><a href={`/movie/${id}`}>{title}</a></h2>
-                    <span className="movie-rank">#{rank}</span>
+            </Link>
+            <Link className="movie-card-content-link" to={`/movie/${id}`} aria-label={`${title} 상세 정보`}>
+                <div className="movie-card-content">
+                    <div className="movie-card-heading">
+                        <h2>{title}</h2>
+                        <span className="movie-rank">#{rank}</span>
+                    </div>
+                    <span className={`movie-region ${region === "국내" ? "movie-region-domestic" : "movie-region-foreign"}`}>{region}</span>
+                    <p className="movie-year">{releaseDate} 개봉</p>
+                    <p className="movie-synopsis">{synopsis}</p>
+                    <p className="movie-cast"><strong>출연</strong> {cast.length ? `${cast.slice(0, 3).join(", ")}${cast.length > 3 ? ` 외 ${cast.length - 3}명` : ""}` : "정보 없음"}</p>
+                    <p className="movie-audience">{audience.toLocaleString("ko-KR")}명 관람</p>
+                    <p className="movie-revenue">매출 {boxOfficeRevenue.toLocaleString("ko-KR")}원</p>
                 </div>
-                <span className={`movie-region ${region === "국내" ? "movie-region-domestic" : "movie-region-foreign"}`}>{region}</span>
-                <p className="movie-year">{releaseDate} 개봉</p>
-                <p className="movie-synopsis">{synopsis}</p>
-                <p className="movie-cast"><strong>출연</strong> {cast.length ? `${cast.slice(0, 3).join(", ")}${cast.length > 3 ? ` 외 ${cast.length - 3}명` : ""}` : "정보 없음"}</p>
-                <p className="movie-audience">{audience.toLocaleString("ko-KR")}명 관람</p>
-                <p className="movie-revenue">매출 {boxOfficeRevenue.toLocaleString("ko-KR")}원</p>
-            </div>
+            </Link>
         </article>
     );
 }

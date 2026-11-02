@@ -1,11 +1,16 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import movieList from "../movie_list.json";
 import { getMoviesByOverallRank } from "../movieRanking";
+import usePageMeta from "../usePageMeta";
 
 function Detail(){
     const { id } = useParams();
     const movieId = Number(id);
     const movie = getMoviesByOverallRank(movieList.data.movies).find((item) => item.id === movieId);
+    usePageMeta(
+        movie ? `${movie.title} 영화 정보` : "영화를 찾을 수 없습니다",
+        movie ? `${movie.title}의 개봉일, 줄거리, 출연진, 관객 수와 매출 정보를 확인하세요.` : "요청하신 영화 정보를 찾을 수 없습니다."
+    );
 
     if (!movie) {
         return <main className="detail-page"><p className="empty-state">영화를 찾을 수 없습니다.</p></main>;
@@ -13,7 +18,7 @@ function Detail(){
 
     return (
         <main className="detail-page">
-            <a className="back-link" href="/">← 영화 목록으로</a>
+            <Link className="back-link" to="/">← 영화 목록으로</Link>
             <article className="detail-card">
                 <div className="detail-poster-wrap">
                     <div className="detail-poster poster-placeholder" role="img" aria-label={`${movie.title} 포스터`}>
@@ -54,7 +59,8 @@ function Detail(){
                         <strong>{movie.box_office_revenue.toLocaleString("ko-KR")}원</strong>
                     </div>
                     <p className="data-source">
-                        출처: <a href={movieList.data_sources[movie.region]} target="_blank" rel="noreferrer">영화관입장권통합전산망(KOBIS)</a>
+                        통계 출처: <a href={movieList.data_sources[movie.region]} target="_blank" rel="noopener noreferrer">영화관입장권통합전산망(KOBIS)</a>.
+                        통계 기준일은 별도로 표시되지 않으며, 수록된 자료와 공식 집계 시점에 차이가 있을 수 있습니다.
                     </p>
                 </div>
             </article>
